@@ -1,6 +1,7 @@
-mod internal;
-mod load;
-mod mov;
+mod component;
+mod config;
+mod system;
 
-pub use load::*;
-pub use mov::*;
+pub use component::*;
+pub use config::*;
+pub use system::*;
