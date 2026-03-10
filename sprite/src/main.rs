@@ -1,11 +1,11 @@
 use bevy::prelude::*;
-use sprite_char::player::load_character;
+use sprite::player::load_player;
 
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_systems(Startup, setup)
-        .add_systems(Update, sprite_char::animate::animate_sprite)
+        .add_systems(Update, sprite::animate::animate_sprite)
         .run();
 }
 
@@ -15,5 +15,5 @@ fn setup(
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
 ) {
     commands.spawn(Camera2d);
-    load_character(&mut commands, &asset_server, &mut texture_atlas_layouts);
+    load_player(&mut commands, &asset_server, &mut texture_atlas_layouts);
 }

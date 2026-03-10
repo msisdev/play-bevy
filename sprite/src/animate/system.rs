@@ -18,7 +18,7 @@ pub fn animate_sprite(
 		// Progress the timer
         timer.tick(time.delta());
 
-		// 
+		// Update sprite
         if timer.just_finished()
             && let Some(atlas) = &mut sprite.texture_atlas
         {
