@@ -1,7 +1,20 @@
 # sprite_char
 
-The player is...
-- moving with the arrow key input.
-- animating in both idle & walk state.
 
-Try with `cargo run`.
+## Goal
+Implement two states for player:
+- Idle/Walk
+- Facing Up/Left/Down/Right
+
+Apply different sprite animation on each state.
+
+
+## How it works
+When arrow key is pressed,
+- set Walk state
+- set facing state
+
+When arrow key is released,
+- set Idle state
+
+And map each state to the corresponding sprite index.
