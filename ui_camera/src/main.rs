@@ -1,29 +1,19 @@
 use bevy::{camera::visibility::RenderLayers, color::palettes::tailwind, prelude::*};
 
+const LAYER_0: RenderLayers = RenderLayers::layer(0);
+const LAYER_1: RenderLayers = RenderLayers::layer(1);
+
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_systems(Startup, setup)
+        .add_systems(Startup, (setup_layer_0, setup_layer_1))
         .add_systems(Update, rotate_sprite)
         .run();
 }
 
-fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn setup_layer_0(mut commands: Commands) {
     // The default camera. `IsDefaultUiCamera` makes this the default camera to render UI elements to. Alternatively, you can add the `UiTargetCamera` component to root UI nodes to define which camera they should be rendered to.
-    commands.spawn((Camera2d, IsDefaultUiCamera));
-
-    // The second camera. The higher order means that this camera will be rendered after the first camera. We will render to this camera to draw on top of the UI.
-    commands.spawn((
-        Camera2d,
-        Camera {
-            order: 1,
-            // Don't draw anything in the background, to see the previous camera.
-            clear_color: ClearColorConfig::None,
-            ..default()
-        },
-        // This camera will only render entities which are on the same render layer.
-        RenderLayers::layer(1),
-    ));
+    commands.spawn((Camera2d, IsDefaultUiCamera, LAYER_0));
 
     commands.spawn((
         // We could also use a `UiTargetCamera` component here instead of the general `IsDefaultUiCamera`.
@@ -36,6 +26,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
             ..default()
         },
         BackgroundColor(tailwind::ROSE_400.into()),
+        LAYER_0,
         children![(
             Node {
                 height: percent(30),
@@ -47,7 +38,23 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                 ..default()
             },
             BorderColor::all(Color::WHITE),
+            LAYER_0,
         )],
+    ));
+}
+
+fn setup_layer_1(mut commands: Commands, asset_server: Res<AssetServer>) {
+    // The second camera. The higher order means that this camera will be rendered after the first camera. We will render to this camera to draw on top of the UI.
+    commands.spawn((
+        Camera2d,
+        Camera {
+            order: 1,
+            // Don't draw anything in the background, to see the previous camera.
+            clear_color: ClearColorConfig::None,
+            ..default()
+        },
+        // This camera will only render entities which are on the same render layer.
+        LAYER_1,
     ));
 
     // This 2D object will be rendered on the second camera, on top of the default camera where the UI is rendered.
@@ -57,7 +64,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
             custom_size: Some(Vec2::new(100., 100.)),
             ..default()
         },
-        RenderLayers::layer(1),
+        LAYER_1,
     ));
 }
 
